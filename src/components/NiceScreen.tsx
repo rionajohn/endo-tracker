@@ -2,25 +2,19 @@ interface NiceScreenProps {
   onBack: () => void
 }
 
-// A single step in the pathway diagram
-function PathStep({ number, title, detail, accent = false }: {
+function PathStep({ number, title, detail }: {
   number: number
   title: string
   detail?: string
-  accent?: boolean
 }) {
   return (
     <div className="flex gap-3">
-      {/* Left: number circle + connecting line */}
       <div className="flex flex-col items-center shrink-0">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-          accent ? 'bg-pink-300 text-ink' : 'bg-stone-100 text-stone-500'
-        }`}>
+        <div className="w-7 h-7 rounded-full bg-pink-300 flex items-center justify-center text-xs font-bold text-white shrink-0">
           {number}
         </div>
         <div className="w-px flex-1 bg-stone-200 mt-1" />
       </div>
-      {/* Right: content */}
       <div className="pb-5 pt-0.5">
         <p className="text-sm font-bold text-ink">{title}</p>
         {detail && <p className="text-xs text-stone-500 mt-0.5 leading-relaxed">{detail}</p>}
@@ -97,36 +91,38 @@ export default function NiceScreen({ onBack }: NiceScreenProps) {
           <p className="text-xs font-bold text-pink-500 uppercase tracking-wide mb-2">The recommended pathway</p>
           <PathStep
             number={1}
-            title="You see your GP"
-            detail="Bring your symptom log. NG73 says a thorough symptom history is the starting point."
-            accent
+            title="Track your symptoms"
+            detail="Every entry you log here builds the record NG73 asks for. A clear symptom history is what turns 'I think something's wrong' into evidence your GP can act on."
           />
           <PathStep
             number={2}
+            title="You see your GP"
+            detail="Bring your symptom log. NG73 says a thorough symptom history is the starting point."
+          />
+          <PathStep
+            number={3}
             title="First-line treatment"
             detail="NSAIDs (ibuprofen/naproxen) for pain, or hormonal contraception (pill, patch, coil). Not a dismissal — it's the protocol."
           />
           <PathStep
-            number={3}
+            number={4}
             title="Still struggling after 3 months?"
             detail="If symptoms don't improve, NG73 says your GP should refer you to a gynaecologist. You can ask for this."
-            accent
           />
           <PathStep
-            number={4}
+            number={5}
             title="Specialist assessment"
             detail="A gynaecologist can offer a transvaginal ultrasound (to check for cysts) and laparoscopy — keyhole surgery that's the only way to get a definitive diagnosis."
           />
           <PathStep
-            number={5}
+            number={6}
             title="Diagnosis and care plan"
             detail="If endometriosis is confirmed, you should get a personalised plan covering pain management, hormonal treatment, surgery options, and fertility support if needed."
-            accent
           />
-          {/* Final dot — no line below */}
+          {/* Final dot — distinct style, no number, no connecting line below */}
           <div className="flex gap-3">
             <div className="w-7 h-7 rounded-full bg-pink-300 flex items-center justify-center shrink-0">
-              <svg className="w-4 h-4 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
