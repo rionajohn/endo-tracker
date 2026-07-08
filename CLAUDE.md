@@ -1,0 +1,23 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# Project: Endometriosis symptom tracker (MVP)
+
+- Stack: React, Vite, TypeScript, Tailwind CSS. Client-side only, no backend - store data in
+  localStorage for MVP.
+- This is a mobile-first app. On all screen sizes, the app renders inside a fixed phone-width
+  frame (max-width: 420px), centred on the page, so it looks and behaves like a phone screen
+  even when viewed on a desktop browser. Outside that frame is just page background.
+- Touch-friendly targets: buttons and tappable elements at least 44px tall.
+- Add the viewport meta tag for correct mobile scaling.
+- Symptom logging fields must map to SOCRATES: Site, Onset, Character, Radiation, Timing,
+  Exacerbating/relieving factors, Severity - always captured in full, regardless of how they're
+  displayed to the patient.
+- Flagging thresholds are based on NICE NG73 - flag any invented threshold clearly as a
+  placeholder needing clinical review.
+- Two outputs, same data: patient-facing "Wrapped" slides use plain language, one idea per
+  slide, no clinical terminology. The GP-facing report keeps full SOCRATES structure and
+  terminology.
+- Never phrase output as a diagnosis. Always phrase as "a pattern to discuss with your GP".
+- See @BRIEF.md for the full project brief.
