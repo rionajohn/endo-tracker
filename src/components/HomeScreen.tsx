@@ -4,7 +4,7 @@ interface HomeScreenProps {
 
 export default function HomeScreen({ onStartLogging }: HomeScreenProps) {
   return (
-    <div className="p-6 flex flex-col gap-6 h-full">
+    <div className="p-6 flex flex-col gap-5 h-full">
       <div className="flex flex-col gap-2 pt-4">
         <h1 className="text-3xl font-extrabold text-ink tracking-tight">Endo Tracker</h1>
         <p className="text-stone-500 text-sm leading-relaxed">
@@ -12,15 +12,30 @@ export default function HomeScreen({ onStartLogging }: HomeScreenProps) {
         </p>
       </div>
 
-      <div className="bg-pink-50 rounded-3xl p-5 flex flex-col gap-3">
-        <p className="text-sm font-semibold text-ink">Why it matters</p>
-        <p className="text-sm text-stone-600 leading-relaxed">
-          A documented symptom pattern is what makes a doctor act. This app helps you log
-          symptoms in the same structure your GP uses — so your story is impossible to dismiss.
+      {/* NICE card — prominent, warm, backed by clinical guidance */}
+      <div className="bg-pink-100 rounded-3xl p-6 flex flex-col gap-3">
+        <span className="self-start bg-pink-300 text-ink text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">
+          Backed by NICE guidance
+        </span>
+        <p className="text-base font-extrabold text-ink leading-snug">
+          Tracking your symptoms is something your doctor will actually welcome
         </p>
+        <p className="text-sm text-stone-600 leading-relaxed">
+          NICE — the guidelines doctors in the UK use to help spot and diagnose endometriosis —
+          specifically recommends a clear symptom history as part of getting you the right care.
+          Every entry you log helps build exactly that.
+        </p>
+        <a
+          href="https://www.nice.org.uk/guidance/ng73/resources/visual-summary-on-first-presentation-initial-management-diagnosis-referral-and-ongoing-care-of-pdf-13559822461"
+          target="_blank"
+          rel="noreferrer"
+          className="text-sm font-semibold text-pink-700 underline-offset-2 hover:underline"
+        >
+          Read the NICE NG73 guidance →
+        </a>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {[
           { label: 'Log', desc: 'Record each symptom as it happens' },
           { label: 'Calendar', desc: 'See your pattern over time' },

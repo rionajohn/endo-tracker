@@ -7,16 +7,16 @@
   --color-cream: #f4f1ea;
   --color-ink: #17161c;
 
-  /* Primary accent - soft pink, used for CTAs, selection and the flag state. */
-  --color-pink-50: #fdf1f9;
-  --color-pink-100: #fbe0f1;
-  --color-pink-200: #f6c3e3;
-  --color-pink-300: #eea1d1;
-  --color-pink-400: #e37fbd;
-  --color-pink-500: #d35ba3;
-  --color-pink-600: #b13f85;
-  --color-pink-700: #8c2f68;
-  --color-pink-800: #6b2350;
+  /* Primary accent - pastel purple, used for CTAs, selection and the flag state. */
+  --color-pink-50: #f5f3ff;
+  --color-pink-100: #ede9fe;
+  --color-pink-200: #ddd6fe;
+  --color-pink-300: #c4b5fd;
+  --color-pink-400: #a78bfa;
+  --color-pink-500: #8b5cf6;
+  --color-pink-600: #7c3aed;
+  --color-pink-700: #6d28d9;
+  --color-pink-800: #5b21b6;
 
   /* Secondary accents used sparingly for tags/status, matching the mockup's pastel set. */
   --color-sage: #adc08a;
