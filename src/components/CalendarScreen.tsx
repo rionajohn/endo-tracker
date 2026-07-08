@@ -55,6 +55,8 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
   ]
   while (cells.length % 7 !== 0) cells.push(null)
 
+  const numWeeks = cells.length / 7
+
   const selectedEntries = entries
     .filter(e => e.createdAt.startsWith(selectedDate))
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
@@ -69,10 +71,11 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
     <div className="h-full flex flex-col">
 
       {/* ── Top region: month grid — expands to fill when no entries panel ── */}
-      <div className={`${hasEntries ? 'flex-[3]' : 'flex-1'} flex flex-col px-4 pt-4 pb-2 min-h-0`}>
+      {/* gap-3 is the single spacing unit for every gap in this column */}
+      <div className={`${hasEntries ? 'flex-[3]' : 'flex-1'} flex flex-col gap-3 px-4 pt-4 pb-2 min-h-0`}>
 
         {/* Month navigation */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={prevMonth}
@@ -100,22 +103,37 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
           </button>
         </div>
 
-        {/* Today button — own row, centred, outlined pill */}
-        <div className="flex justify-center mb-2">
+        {/* Today button — own row, centred, filled pill */}
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={goToToday}
-            className="text-[11px] font-bold text-pink-500 border border-pink-300 px-4 py-1.5 rounded-full active:bg-pink-50 transition-colors"
+            className="text-[11px] font-bold text-ink bg-pink-300 px-4 py-1.5 rounded-full active:bg-pink-400 transition-colors"
           >
             Today
           </button>
         </div>
 
-        {/* Calendar grid — circles */}
-        <div className="grid grid-cols-7">
+        {/* Day-header row — each label sits in a filled circle matching the
+            date-cell footprint (p-0.5 + w-full aspect-square), so the eye
+            reads tight slots with 4px gaps rather than floating text */}
+        <div className="grid grid-cols-7 shrink-0">
           {DAY_HEADERS.map(d => (
-            <div key={d} className="text-center text-xs text-stone-400 font-semibold pb-1">{d}</div>
+            <div key={d} className="flex items-center justify-center p-0.5">
+              <div className="w-full aspect-square rounded-full bg-stone-100 flex items-center justify-center">
+                <span className="text-[10px] text-stone-500 font-bold">{d}</span>
+              </div>
+            </div>
           ))}
+        </div>
+
+        {/* Date-cell grid — flex-1 so it fills all remaining height;
+            gridTemplateRows spreads weeks evenly rather than leaving
+            the natural content height with an empty gap below */}
+        <div
+          className="flex-1 min-h-0 grid grid-cols-7"
+          style={{ gridTemplateRows: `repeat(${numWeeks}, 1fr)` }}
+        >
           {cells.map((day, i) => {
             if (day === null) return <div key={`blank-${i}`} />
             const ds = toDateStr(viewYear, viewMonth, day)
@@ -123,9 +141,6 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
             const isSelected = selectedDate === ds
             const isToday = ds === todayStr
 
-            // Selected: solid purple fill
-            // Today (not selected): purple outline ring, no fill — visually distinct
-            // Neither: transparent
             const cellBg = isSelected
               ? 'bg-pink-300'
               : isToday
@@ -133,6 +148,7 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
               : 'active:bg-stone-100'
 
             return (
+              // Wrapper fills the grid cell; flex centres the circle inside it
               <div key={ds} className="flex items-center justify-center p-0.5">
                 <button
                   type="button"
