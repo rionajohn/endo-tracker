@@ -1,8 +1,9 @@
 interface HomeScreenProps {
   onStartLogging: () => void
+  onOpenNice: () => void
 }
 
-export default function HomeScreen({ onStartLogging }: HomeScreenProps) {
+export default function HomeScreen({ onStartLogging, onOpenNice }: HomeScreenProps) {
   return (
     <div className="p-6 flex flex-col gap-5 h-full">
       <div className="flex flex-col gap-2 pt-4">
@@ -25,14 +26,13 @@ export default function HomeScreen({ onStartLogging }: HomeScreenProps) {
           specifically recommends a clear symptom history as part of getting you the right care.
           Every entry you log helps build exactly that.
         </p>
-        <a
-          href="https://www.nice.org.uk/guidance/ng73/resources/visual-summary-on-first-presentation-initial-management-diagnosis-referral-and-ongoing-care-of-pdf-13559822461"
-          target="_blank"
-          rel="noreferrer"
-          className="text-sm font-semibold text-pink-700 underline-offset-2 hover:underline"
+        <button
+          type="button"
+          onClick={onOpenNice}
+          className="text-sm font-semibold text-pink-700 text-left active:opacity-70"
         >
           Read the NICE NG73 guidance →
-        </a>
+        </button>
       </div>
 
       <div className="flex flex-col gap-2.5">

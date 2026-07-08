@@ -33,7 +33,7 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
 
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
   const rawFirstDay = new Date(viewYear, viewMonth, 1).getDay()
-  const firstDay = rawFirstDay === 0 ? 6 : rawFirstDay - 1 // Mon=0…Sun=6
+  const firstDay = rawFirstDay === 0 ? 6 : rawFirstDay - 1
 
   function prevMonth() {
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) }
@@ -42,6 +42,11 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
   function nextMonth() {
     if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0) }
     else setViewMonth(m => m + 1)
+  }
+  function goToToday() {
+    setViewYear(today.getFullYear())
+    setViewMonth(today.getMonth())
+    setSelectedDate(todayStr)
   }
 
   const cells: (number | null)[] = [
@@ -54,16 +59,18 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
     .filter(e => e.createdAt.startsWith(selectedDate))
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
 
+  const hasEntries = selectedEntries.length > 0
+
   const selectedLabel = new Date(selectedDate + 'T12:00:00').toLocaleDateString(undefined, {
     weekday: 'short', day: 'numeric', month: 'short',
   })
 
   return (
-    // Fill the content area exactly and split into two stacked regions
     <div className="h-full flex flex-col">
 
-      {/* ── Top region (~75%): month grid ── */}
-      <div className="flex-[3] flex flex-col px-4 pt-4 pb-2 min-h-0">
+      {/* ── Top region: month grid — expands to fill when no entries panel ── */}
+      <div className={`${hasEntries ? 'flex-[3]' : 'flex-1'} flex flex-col px-4 pt-4 pb-2 min-h-0`}>
+
         {/* Month navigation */}
         <div className="flex items-center justify-between mb-3">
           <button
@@ -76,9 +83,20 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          <span className="font-extrabold text-ink text-base">
-            {MONTH_NAMES[viewMonth]} {viewYear}
-          </span>
+
+          <div className="flex items-center gap-2">
+            <span className="font-extrabold text-ink text-base">
+              {MONTH_NAMES[viewMonth]} {viewYear}
+            </span>
+            <button
+              type="button"
+              onClick={goToToday}
+              className="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full active:bg-pink-100 transition-colors"
+            >
+              Today
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={nextMonth}
@@ -91,53 +109,53 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
           </button>
         </div>
 
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 flex-1">
+        {/* Calendar grid — circles */}
+        <div className="grid grid-cols-7">
           {DAY_HEADERS.map(d => (
             <div key={d} className="text-center text-xs text-stone-400 font-semibold pb-1">{d}</div>
           ))}
           {cells.map((day, i) => {
             if (day === null) return <div key={`blank-${i}`} />
             const ds = toDateStr(viewYear, viewMonth, day)
-            const hasEntries = datesWithEntries.has(ds)
+            const hasEntryDot = datesWithEntries.has(ds)
             const isSelected = selectedDate === ds
             const isToday = ds === todayStr
+
+            // Selected: solid purple fill
+            // Today (not selected): purple outline ring, no fill — visually distinct
+            // Neither: transparent
+            const cellBg = isSelected
+              ? 'bg-pink-300'
+              : isToday
+              ? 'ring-2 ring-pink-400'
+              : 'active:bg-stone-100'
+
             return (
-              <button
-                key={ds}
-                type="button"
-                onClick={() => setSelectedDate(ds)}
-                className={`flex flex-col items-center justify-center rounded-xl transition-colors ${
-                  isSelected
-                    ? 'bg-pink-300'
-                    : isToday
-                    ? 'bg-pink-50'
-                    : 'active:bg-stone-100'
-                }`}
-              >
-                <span className={`text-sm font-semibold ${isToday && !isSelected ? 'text-pink-600' : 'text-ink'}`}>
-                  {day}
-                </span>
-                {hasEntries && (
-                  <span className={`mt-0.5 w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-ink' : 'bg-pink-400'}`} />
-                )}
-              </button>
+              <div key={ds} className="flex items-center justify-center p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate(ds)}
+                  className={`w-full aspect-square rounded-full flex flex-col items-center justify-center transition-colors ${cellBg}`}
+                >
+                  <span className={`text-sm font-semibold leading-none ${isToday && !isSelected ? 'text-pink-500' : 'text-ink'}`}>
+                    {day}
+                  </span>
+                  {hasEntryDot && (
+                    <span className={`mt-0.5 w-1 h-1 rounded-full ${isSelected ? 'bg-ink/60' : 'bg-pink-400'}`} />
+                  )}
+                </button>
+              </div>
             )
           })}
         </div>
       </div>
 
-      {/* ── Bottom region (~25%): selected day entries ── */}
-      <div className="flex-[1] flex flex-col min-h-0 border-t border-stone-100 bg-white rounded-t-3xl px-4 pt-3 pb-2 overflow-y-auto">
-        <p className="text-xs font-extrabold text-stone-400 uppercase tracking-wide mb-2 shrink-0">
-          {selectedLabel}
-        </p>
-
-        {selectedEntries.length === 0 ? (
-          <p className="text-sm text-stone-400 my-auto text-center">
-            No entries logged for this date.
+      {/* ── Bottom region: entries for selected date — only shown when entries exist ── */}
+      {hasEntries && (
+        <div className="flex-[1] flex flex-col min-h-0 border-t border-stone-100 bg-white rounded-t-3xl px-4 pt-3 pb-2 overflow-y-auto">
+          <p className="text-xs font-extrabold text-stone-400 uppercase tracking-wide mb-2 shrink-0">
+            {selectedLabel}
           </p>
-        ) : (
           <ul className="flex flex-col gap-2" data-testid="log-history-list">
             {selectedEntries.map(entry => (
               <li key={entry.id} className="bg-stone-50 rounded-2xl p-3">
@@ -169,8 +187,8 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
               </li>
             ))}
           </ul>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

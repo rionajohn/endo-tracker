@@ -6,10 +6,11 @@ import CalendarScreen from './components/CalendarScreen'
 import HomeScreen from './components/HomeScreen'
 import CommunityScreen from './components/CommunityScreen'
 import ProfileScreen from './components/ProfileScreen'
+import NiceScreen from './components/NiceScreen'
 import { deleteEntry, getEntries, saveEntry } from './lib/storage'
 import type { NewSymptomEntry, SymptomEntry } from './types'
 
-type Screen = 'home' | 'calendar' | 'log' | 'community' | 'profile'
+type Screen = 'home' | 'calendar' | 'log' | 'community' | 'profile' | 'nice'
 
 // --- Inline SVG icons (no icon-library dependency) ---
 
@@ -119,7 +120,8 @@ function App() {
 
       {/* Scrollable content — ONLY this region scrolls */}
       <main className="flex-1 overflow-y-auto">
-        {screen === 'home'      && <HomeScreen onStartLogging={() => setScreen('log')} />}
+        {screen === 'home'      && <HomeScreen onStartLogging={() => setScreen('log')} onOpenNice={() => setScreen('nice')} />}
+        {screen === 'nice'      && <NiceScreen onBack={() => setScreen('home')} />}
         {screen === 'calendar'  && <CalendarScreen entries={entries} onDelete={handleDelete} />}
         {screen === 'log'       && <SymptomForm onSave={handleSave} />}
         {screen === 'community' && <CommunityScreen />}
