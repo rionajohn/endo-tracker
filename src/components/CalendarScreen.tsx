@@ -84,18 +84,9 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
             </svg>
           </button>
 
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-ink text-base">
-              {MONTH_NAMES[viewMonth]} {viewYear}
-            </span>
-            <button
-              type="button"
-              onClick={goToToday}
-              className="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full active:bg-pink-100 transition-colors"
-            >
-              Today
-            </button>
-          </div>
+          <span className="font-extrabold text-ink text-base">
+            {MONTH_NAMES[viewMonth]} {viewYear}
+          </span>
 
           <button
             type="button"
@@ -106,6 +97,17 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
             <svg className="w-5 h-5 text-stone-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>
+          </button>
+        </div>
+
+        {/* Today button — own row, centred, outlined pill */}
+        <div className="flex justify-center mb-2">
+          <button
+            type="button"
+            onClick={goToToday}
+            className="text-[11px] font-bold text-pink-500 border border-pink-300 px-4 py-1.5 rounded-full active:bg-pink-50 transition-colors"
+          >
+            Today
           </button>
         </div>
 
