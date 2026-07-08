@@ -55,8 +55,6 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
   ]
   while (cells.length % 7 !== 0) cells.push(null)
 
-  const numWeeks = cells.length / 7
-
   const selectedEntries = entries
     .filter(e => e.createdAt.startsWith(selectedDate))
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
@@ -114,26 +112,16 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
           </button>
         </div>
 
-        {/* Day-header row — each label sits in a filled circle matching the
-            date-cell footprint (p-0.5 + w-full aspect-square), so the eye
-            reads tight slots with 4px gaps rather than floating text */}
+        {/* Day-header row */}
         <div className="grid grid-cols-7 shrink-0">
           {DAY_HEADERS.map(d => (
-            <div key={d} className="flex items-center justify-center p-0.5">
-              <div className="w-full aspect-square rounded-full bg-stone-100 flex items-center justify-center">
-                <span className="text-[10px] text-stone-500 font-bold">{d}</span>
-              </div>
-            </div>
+            <div key={d} className="text-center text-xs text-stone-400 font-semibold">{d}</div>
           ))}
         </div>
 
-        {/* Date-cell grid — flex-1 so it fills all remaining height;
-            gridTemplateRows spreads weeks evenly rather than leaving
-            the natural content height with an empty gap below */}
-        <div
-          className="flex-1 min-h-0 grid grid-cols-7"
-          style={{ gridTemplateRows: `repeat(${numWeeks}, 1fr)` }}
-        >
+        {/* Date-cell grid — fixed 72px rows: circles have breathing room without
+            the extreme row inflation that 1fr rows produce */}
+        <div className="grid grid-cols-7" style={{ gridAutoRows: '72px' }}>
           {cells.map((day, i) => {
             if (day === null) return <div key={`blank-${i}`} />
             const ds = toDateStr(viewYear, viewMonth, day)
