@@ -129,54 +129,55 @@ function App() {
         {screen === 'profile'   && <ProfileScreen />}
       </main>
 
-      {/* Bottom navigation — fixed to the phone frame, never scrolls */}
+      {/* Bottom navigation — floating pill, fixed to frame, never scrolls */}
       <nav className="relative shrink-0 print:hidden z-10">
-        <div className="flex items-center bg-cream border-t border-stone-200 h-16 px-1">
-          {/* Left two items */}
-          {LEFT_NAV.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setScreen(id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-2 min-h-11 rounded-xl transition-colors ${
-                screen === id ? 'text-pink-500' : 'text-stone-400 active:text-stone-600'
-              }`}
-            >
-              <Icon />
-              <span className="text-[10px] font-semibold">{label}</span>
-            </button>
-          ))}
+        <div className="relative mx-4 mb-4">
+          {/* Floating dark pill */}
+          <div className="flex items-center bg-ink rounded-full h-14 px-3">
+            {/* Left two items — icon only, no labels */}
+            {LEFT_NAV.map(({ id, Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setScreen(id)}
+                className={`flex-1 flex items-center justify-center min-h-11 rounded-full transition-colors ${
+                  screen === id ? 'text-white' : 'text-stone-500 active:text-stone-300'
+                }`}
+              >
+                <Icon />
+              </button>
+            ))}
 
-          {/* Centre spacer — the raised plus button sits here via absolute positioning */}
-          <div className="flex-1" />
+            {/* Centre spacer for the raised plus button */}
+            <div className="flex-1" />
 
-          {/* Right two items */}
-          {RIGHT_NAV.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setScreen(id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-2 min-h-11 rounded-xl transition-colors ${
-                screen === id ? 'text-pink-500' : 'text-stone-400 active:text-stone-600'
-              }`}
-            >
-              <Icon />
-              <span className="text-[10px] font-semibold">{label}</span>
-            </button>
-          ))}
+            {/* Right two items — icon only, no labels */}
+            {RIGHT_NAV.map(({ id, Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setScreen(id)}
+                className={`flex-1 flex items-center justify-center min-h-11 rounded-full transition-colors ${
+                  screen === id ? 'text-white' : 'text-stone-500 active:text-stone-300'
+                }`}
+              >
+                <Icon />
+              </button>
+            ))}
+          </div>
+
+          {/* Raised circular Log Symptoms button — floats above the pill */}
+          <button
+            type="button"
+            onClick={() => setScreen('log')}
+            aria-label="Log symptoms"
+            className={`absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors text-white ${
+              screen === 'log' ? 'bg-pink-500' : 'bg-pink-400 active:bg-pink-500'
+            }`}
+          >
+            <PlusIcon />
+          </button>
         </div>
-
-        {/* Raised circular Log Symptoms button — elevated above the nav bar line */}
-        <button
-          type="button"
-          onClick={() => setScreen('log')}
-          aria-label="Log symptoms"
-          className={`absolute left-1/2 -translate-x-1/2 -top-7 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors ${
-            screen === 'log' ? 'bg-pink-400' : 'bg-pink-300 active:bg-pink-400'
-          } text-ink`}
-        >
-          <PlusIcon />
-        </button>
       </nav>
     </PhoneFrame>
   )

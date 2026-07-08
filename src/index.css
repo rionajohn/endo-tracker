@@ -32,6 +32,15 @@ body {
   margin: 0;
 }
 
+/* Hide scrollbar track/thumb everywhere while keeping scroll functional */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* Printable GP report: hide everything else when printing. */
 @media print {
   body * {
