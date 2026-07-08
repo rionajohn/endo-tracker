@@ -21,3 +21,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   terminology.
 - Never phrase output as a diagnosis. Always phrase as "a pattern to discuss with your GP".
 - See @BRIEF.md for the full project brief.
+- The app has distinct screens (Home, Log symptom, History, Wrapped slides, GP report), not
+  one long scrolling page. Only one screen is visible at a time, switched via navigation.
+- The phone frame has three fixed regions: a header (optional, per screen), a scrollable
+  content area in the middle that changes per screen, and a persistent bottom navigation bar
+  that never scrolls out of view and stays identical across all screens except the active
+  tab indicator.
+- Only the middle content area scrolls. The phone frame itself, the header, and the bottom
+  nav never move.
+- The bottom nav has five items: Home, Calendar, Log Symptoms (centre), Community, Profile.
+  Log Symptoms is a raised circular plus (+) button, larger than the other four, elevated
+  above the nav bar line, filled with the primary colour (pink-300), no label. The other
+  four are standard icon + label items.
+- Community and Profile are placeholder "Coming soon" screens — no real functionality is
+  built for MVP. Scope decisions for these screens are pending.

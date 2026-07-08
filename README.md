@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# Endo Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A mobile-first symptom tracking app for endometriosis, designed to help women document their symptoms and produce a clinically structured summary to share with their GP.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Endo Tracker helps users log symptoms using the SOCRATES framework (Site, Onset, Character, Radiation, Timing, Exacerbating/relieving factors, Severity) — the same structure a clinician uses when taking a history. From those logs it generates two outputs:
 
-## React Compiler
+- **Patient-facing "Wrapped" summary** — plain-language slides showing the user their own symptom pattern, without clinical jargon.
+- **GP-facing report** — a structured SOCRATES summary built to be quickly read and acted on by a clinician.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Threshold flagging logic (based on NICE NG73) highlights when logged symptoms warrant a "consider seeing your GP" recommendation.
 
-## Expanding the Oxlint configuration
+All data is stored locally in the browser (localStorage). There is no backend or account system.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Tech stack
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS v4
+- Vitest + Testing Library
+
+## Running locally
+
+**Prerequisites:** Node.js 18 or later.
+
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Then open [http://localhost:5173](http://localhost:5173) in your browser. The app renders inside a phone-width frame so it looks and behaves like a mobile app even on desktop.
+
+## Other commands
+
+```bash
+npm run build      # Type-check and build for production
+npm run preview    # Preview the production build locally
+npm run test       # Run the test suite
+npm run lint       # Lint the codebase
+```
+
+## Clinical basis
+
+Flagging thresholds are derived from [NICE NG73](https://www.nice.org.uk/guidance/ng73) (Endometriosis: diagnosis and management). The app flags and recommends — it never diagnoses.
