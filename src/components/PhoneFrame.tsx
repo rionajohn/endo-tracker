@@ -7,10 +7,16 @@ const BEZEL_WIDTH = 390
 const BEZEL_HEIGHT = 780
 const BEZEL_BREAKPOINT = 480
 
+// Vertical breathing room kept above/below the bezel on wide viewports —
+// matches the min-[480px]:py-12 classes below. Subtracted from the
+// available height so the frame scales to fit inside the space left over,
+// rather than the margin getting squeezed out on short viewports.
+const BEZEL_MARGIN_Y = 48
+
 function computeBezelScale() {
   if (typeof window === 'undefined' || window.innerWidth < BEZEL_BREAKPOINT) return 1
   const widthScale = window.innerWidth / BEZEL_WIDTH
-  const heightScale = window.innerHeight / BEZEL_HEIGHT
+  const heightScale = (window.innerHeight - BEZEL_MARGIN_Y * 2) / BEZEL_HEIGHT
   return Math.min(1, widthScale, heightScale)
 }
 
@@ -38,7 +44,7 @@ export default function PhoneFrame({ children }: { children: ReactNode }) {
 
   return (
     // Page — stone-200 on wide (neutral bg behind bezel), same on narrow (hidden by full-screen app)
-    <div className="h-svh w-full bg-stone-200 flex justify-center min-[480px]:items-center font-sans print:bg-white overflow-hidden">
+    <div className="h-svh w-full bg-stone-200 flex justify-center min-[480px]:items-center min-[480px]:py-12 box-border font-sans print:bg-white overflow-hidden">
 
       {/*
         Narrow (<480px): transparent passthrough — w-full h-full so the app
