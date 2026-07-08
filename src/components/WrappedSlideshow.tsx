@@ -35,22 +35,29 @@ export default function WrappedSlideshow({ entries }: { entries: SymptomEntry[] 
         {slides.map((_, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full ${i <= index ? 'bg-purple-600' : 'bg-neutral-200'}`}
+            className={`h-1 flex-1 rounded-full ${i <= index ? 'bg-pink-500' : 'bg-stone-200'}`}
           />
         ))}
       </div>
 
       <div
-        className={`flex-1 flex flex-col items-center justify-center text-center px-6 gap-4 ${
-          slide.flagged ? 'bg-purple-700 text-white' : 'bg-white text-neutral-900'
-        }`}
+        className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         data-testid="wrapped-slide"
         data-slide-index={index}
       >
-        <h2 className="text-2xl font-bold">{slide.title}</h2>
-        <p className="text-base leading-relaxed">{slide.body}</p>
+        {slide.flagged ? (
+          <div className="bg-pink-100 rounded-3xl px-6 py-8 flex flex-col gap-4">
+            <h2 className="text-3xl font-extrabold text-ink tracking-tight">{slide.title}</h2>
+            <p className="text-base leading-relaxed text-pink-800">{slide.body}</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-3xl font-extrabold text-ink tracking-tight">{slide.title}</h2>
+            <p className="text-base leading-relaxed text-stone-600">{slide.body}</p>
+          </>
+        )}
       </div>
 
       <div className="flex gap-2 p-4">
@@ -58,7 +65,7 @@ export default function WrappedSlideshow({ entries }: { entries: SymptomEntry[] 
           type="button"
           onClick={() => goTo(index - 1)}
           disabled={isFirst}
-          className="min-h-11 flex-1 rounded-lg border border-neutral-300 text-sm font-medium disabled:opacity-30"
+          className="min-h-11 flex-1 rounded-full bg-stone-100 text-ink text-sm font-semibold disabled:opacity-30"
         >
           Back
         </button>
@@ -66,7 +73,7 @@ export default function WrappedSlideshow({ entries }: { entries: SymptomEntry[] 
           type="button"
           onClick={() => goTo(index + 1)}
           disabled={isLast}
-          className="min-h-11 flex-1 rounded-lg bg-purple-600 text-white text-sm font-medium disabled:opacity-30"
+          className="min-h-11 flex-1 rounded-full bg-ink text-white text-sm font-semibold disabled:opacity-30"
         >
           Next
         </button>

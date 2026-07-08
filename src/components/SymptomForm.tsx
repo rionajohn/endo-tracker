@@ -116,8 +116,8 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 p-4 pb-8">
       <div>
-        <h1 className="text-lg font-bold text-neutral-900">Log a symptom</h1>
-        <p className="text-sm text-neutral-500 mt-1">
+        <h1 className="text-2xl font-extrabold text-ink tracking-tight">Log a symptom</h1>
+        <p className="text-sm text-stone-500 mt-1">
           Answer as best you can - you can skip anything that doesn't apply.
         </p>
       </div>
@@ -131,10 +131,10 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
         onChange={setSite}
       />
       <label className="flex flex-col gap-1">
-        <span className="text-sm text-neutral-600">Other site (optional)</span>
+        <span className="text-sm text-stone-600">Other site (optional)</span>
         <input
           type="text"
-          className="min-h-11 border border-neutral-300 rounded-lg px-3 text-sm"
+          className="min-h-11 border border-transparent bg-white rounded-3xl px-3 text-sm text-ink placeholder:text-stone-400 focus:outline-none focus:border-pink-400"
           value={siteOther}
           onChange={(e) => setSiteOther(e.target.value)}
           placeholder="e.g. shoulder tip pain"
@@ -227,10 +227,14 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
       />
 
       {/* Severity */}
-      <div>
+      <div className="bg-pink-100 rounded-3xl p-4">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-neutral-800">
-            Severity - how bad is the pain right now? ({severity}/10)
+          <span className="text-sm font-semibold text-ink">
+            Severity - how bad is the pain right now?
+          </span>
+          <span className="text-4xl font-extrabold text-pink-700 tracking-tight">
+            {severity}
+            <span className="text-lg font-semibold text-pink-500">/10</span>
           </span>
           <input
             type="range"
@@ -239,21 +243,21 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
             step={1}
             value={severity}
             onChange={(e) => setSeverity(Number(e.target.value))}
-            className="h-11 accent-purple-600"
+            className="h-11 accent-pink-600"
             aria-label="Pain severity"
           />
         </label>
-        <div className="flex justify-between text-xs text-neutral-400 mt-1">
+        <div className="flex justify-between text-xs text-pink-600/70 mt-1">
           <span>0 - no pain</span>
           <span>10 - worst possible</span>
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
+      {error && <p className="text-sm text-pink-700 font-medium">{error}</p>}
 
       <button
         type="submit"
-        className="min-h-11 rounded-lg bg-purple-600 text-white font-semibold text-sm active:bg-purple-700"
+        className="min-h-11 rounded-full bg-ink text-white font-semibold text-sm active:bg-stone-800"
       >
         Save entry
       </button>

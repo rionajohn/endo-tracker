@@ -44,19 +44,21 @@ function App() {
         {tab === 'report' && <GPReport entries={entries} />}
       </div>
 
-      <nav className="print:hidden flex border-t border-neutral-200 shrink-0">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => setTab(t.id)}
-            className={`flex-1 min-h-11 py-2 text-xs font-medium ${
-              tab === t.id ? 'text-purple-700 bg-purple-50' : 'text-neutral-500'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <nav className="print:hidden shrink-0 p-4">
+        <div className="flex gap-1 bg-ink rounded-full p-1.5">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`flex-1 min-h-11 px-2 rounded-full text-xs font-semibold transition-colors ${
+                tab === t.id ? 'bg-pink-300 text-ink' : 'text-stone-300'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </nav>
     </PhoneFrame>
   )

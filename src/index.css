@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  /* Warm cream canvas + near-black ink, sampled from design/references. */
+  --color-cream: #f4f1ea;
+  --color-ink: #17161c;
+
+  /* Primary accent - soft pink, used for CTAs, selection and the flag state. */
+  --color-pink-50: #fdf1f9;
+  --color-pink-100: #fbe0f1;
+  --color-pink-200: #f6c3e3;
+  --color-pink-300: #eea1d1;
+  --color-pink-400: #e37fbd;
+  --color-pink-500: #d35ba3;
+  --color-pink-600: #b13f85;
+  --color-pink-700: #8c2f68;
+  --color-pink-800: #6b2350;
+
+  /* Secondary accents used sparingly for tags/status, matching the mockup's pastel set. */
+  --color-sage: #adc08a;
+  --color-butter: #f0d876;
+  --color-periwinkle: #b3c6ef;
+}
+
 :root {
   color-scheme: light dark;
 }

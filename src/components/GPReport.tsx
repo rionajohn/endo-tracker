@@ -27,24 +27,27 @@ export default function GPReport({ entries }: { entries: SymptomEntry[] }) {
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 print:hidden flex items-center justify-between">
-        <h1 className="text-lg font-bold text-neutral-900">GP report</h1>
+        <h1 className="text-lg font-bold text-ink">GP report</h1>
         <button
           type="button"
           onClick={() => window.print()}
-          className="min-h-11 px-4 rounded-lg bg-purple-600 text-white text-sm font-medium"
+          className="min-h-11 px-4 rounded-full bg-ink text-white text-sm font-semibold"
         >
           Print / export
         </button>
       </div>
 
-      <div id="printable-report" className="p-4 text-sm text-neutral-900 overflow-y-auto">
+      <div
+        id="printable-report"
+        className="mx-4 mb-4 p-4 bg-white rounded-2xl border border-stone-200 text-sm text-ink overflow-y-auto print:mx-0 print:mb-0 print:border-none print:rounded-none"
+      >
         <h1 className="text-xl font-bold">Symptom Summary Report</h1>
-        <p className="text-neutral-500 mt-1">
+        <p className="text-stone-500 mt-1">
           Self-reported symptom log. Structured per SOCRATES (Site, Onset, Character, Radiation,
           Timing, Exacerbating/relieving factors, Severity). Not a diagnosis - patient-recorded
           data for clinical review.
         </p>
-        <p className="text-neutral-500 mt-1">
+        <p className="text-stone-500 mt-1">
           {entries.length} {entries.length === 1 ? 'entry' : 'entries'} logged
           {sorted.length > 0 && (
             <>
@@ -56,12 +59,12 @@ export default function GPReport({ entries }: { entries: SymptomEntry[] }) {
         </p>
 
         <section
-          className={`mt-4 rounded-lg border p-3 ${flagged ? 'border-purple-400 bg-purple-50' : 'border-neutral-200'}`}
+          className={`mt-4 rounded-lg border p-3 ${flagged ? 'border-pink-300 bg-pink-50' : 'border-stone-200'}`}
         >
           <h2 className="font-semibold">Threshold flag</h2>
           {flagged ? (
             <>
-              <p className="mt-1 font-medium text-purple-800">
+              <p className="mt-1 font-medium text-pink-800">
                 Pattern meets referral-consideration threshold (NICE NG73-derived, placeholder pending
                 clinical review).
               </p>
@@ -72,14 +75,14 @@ export default function GPReport({ entries }: { entries: SymptomEntry[] }) {
               </ul>
             </>
           ) : (
-            <p className="mt-1 text-neutral-600">No threshold currently met.</p>
+            <p className="mt-1 text-stone-600">No threshold currently met.</p>
           )}
         </section>
 
         <h2 className="font-semibold mt-5 mb-2">Entry-by-entry SOCRATES detail</h2>
         <ol className="flex flex-col gap-3">
           {sorted.map((entry, i) => (
-            <li key={entry.id} className="border border-neutral-200 rounded-lg p-3 break-inside-avoid">
+            <li key={entry.id} className="border border-stone-200 rounded-lg p-3 break-inside-avoid">
               <p className="font-semibold">
                 Entry {i + 1} - {formatDate(entry.createdAt)}
               </p>
