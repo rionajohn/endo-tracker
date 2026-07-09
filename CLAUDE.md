@@ -35,7 +35,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   four are standard icon + label items.
 - Community and Profile are placeholder "Coming soon" screens — no real functionality is
   built for MVP. Scope decisions for these screens are pending.
-  - There are now two distinct data collection flows: the existing SOCRATES symptom log (used
+- There are now two distinct data collection flows: the existing SOCRATES symptom log (used
   per-entry, unchanged) and a new one-time Baseline Questionnaire (used once, establishes a
   personal baseline for comparison). Keep these structurally and visually separate - the
   baseline questionnaire is not a symptom log entry.
@@ -46,3 +46,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   (2) symptom location and character, (3) functional impact and medication. See the Marigold
   reference model for the exact structure - locations have their own linked descriptors, and
   bleeding/other-symptoms/medication are recorded for the GP report but don't affect any score.
+- On desktop-width viewports (e.g. above 480px width), wrap the entire app in a visual phone
+  device frame: rounded bezel edges, a notch or camera cutout at the top, and a home indicator
+  bar at the bottom, so it reads as a phone screenshot rather than a plain box.
+- On narrow viewports (actual mobile devices, below 480px), do NOT show the device bezel - the
+  app renders full-screen with no frame, since a real phone is already the frame.
+- The bezel is purely decorative chrome around the existing phone-width app container - it must
+  not change any internal layout, spacing, or component behaviour of the app itself.
