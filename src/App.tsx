@@ -5,12 +5,14 @@ import SymptomForm from './components/SymptomForm'
 import CalendarScreen from './components/CalendarScreen'
 import HomeScreen from './components/HomeScreen'
 import CommunityScreen from './components/CommunityScreen'
-import ProfileScreen from './components/ProfileScreen'
+import PainProfileScreen from './components/PainProfileScreen'
 import NiceScreen from './components/NiceScreen'
+import BaselineQuestionnaireForm from './components/BaselineQuestionnaireForm'
 import { deleteEntry, getEntries, saveEntry } from './lib/storage'
-import type { NewSymptomEntry, SymptomEntry } from './types'
+import { getBaseline, saveBaseline } from './lib/baselineStorage'
+import type { NewBaselineQuestionnaire, NewSymptomEntry, SymptomEntry, BaselineQuestionnaire } from './types'
 
-type Screen = 'home' | 'calendar' | 'log' | 'community' | 'profile' | 'nice'
+type Screen = 'home' | 'calendar' | 'log' | 'community' | 'profile' | 'nice' | 'baseline'
 
 // --- Inline SVG icons (no icon-library dependency) ---
 
@@ -75,7 +77,7 @@ const LEFT_NAV: NavItem[] = [
 
 const RIGHT_NAV: NavItem[] = [
   { id: 'community', label: 'Community', Icon: CommunityIcon },
-  { id: 'profile', label: 'Profile', Icon: ProfileIcon },
+  { id: 'profile', label: 'Pain Profile', Icon: ProfileIcon },
 ]
 
 // Screens that get a title header bar
@@ -83,7 +85,7 @@ const SCREEN_TITLE: Partial<Record<Screen, string>> = {
   calendar: 'Calendar',
   log: 'Log symptoms',
   community: 'Community',
-  profile: 'Profile',
+  profile: 'Pain Profile',
 }
 
 // --- App ---
@@ -91,9 +93,11 @@ const SCREEN_TITLE: Partial<Record<Screen, string>> = {
 function App() {
   const [screen, setScreen] = useState<Screen>('home')
   const [entries, setEntries] = useState<SymptomEntry[]>([])
+  const [baseline, setBaseline] = useState<BaselineQuestionnaire | null>(null)
 
   useEffect(() => {
     setEntries(getEntries())
+    setBaseline(getBaseline())
   }, [])
 
   function handleSave(entry: NewSymptomEntry) {
@@ -105,6 +109,11 @@ function App() {
   function handleDelete(id: string) {
     deleteEntry(id)
     setEntries(getEntries())
+  }
+
+  function handleSaveBaseline(record: NewBaselineQuestionnaire) {
+    saveBaseline(record)
+    setBaseline(getBaseline())
   }
 
   const title = SCREEN_TITLE[screen]
@@ -126,16 +135,24 @@ function App() {
           {screen === 'calendar'  && <CalendarScreen entries={entries} onDelete={handleDelete} />}
           {screen === 'log'       && <SymptomForm onSave={handleSave} />}
           {screen === 'community' && <CommunityScreen />}
-          {screen === 'profile'   && <ProfileScreen />}
+          {screen === 'profile'   && <PainProfileScreen baseline={baseline} onOpenBaseline={() => setScreen('baseline')} />}
+          {screen === 'baseline'  && (
+            <BaselineQuestionnaireForm
+              initial={baseline}
+              onSave={handleSaveBaseline}
+              onBack={() => setScreen('profile')}
+            />
+          )}
         </main>
 
         {/* Scroll fade — wide/bezel view only. Blurs and fades scrolled
             content as it nears the top of the scrollable area, echoing how
             a real phone's status bar/notch blurs content beneath it. Skipped
-            for screens (calendar, nice) that own their own internal scroll
-            region with static chrome above it — they render their own local
-            fade instead, so this generic one doesn't blur that static chrome. */}
-        {screen !== 'calendar' && screen !== 'nice' && (
+            for screens (calendar, nice, baseline) that own their own internal
+            scroll region with static chrome above it — they render their own
+            local fade instead, so this generic one doesn't blur that static
+            chrome. */}
+        {screen !== 'calendar' && screen !== 'nice' && screen !== 'baseline' && (
           <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-14 z-10 backdrop-blur-md bg-gradient-to-b from-cream/95 via-cream/60 to-transparent [mask-image:linear-gradient(to_bottom,black,black_40%,transparent)]" />
         )}
       </div>
@@ -146,11 +163,12 @@ function App() {
           {/* Floating dark pill */}
           <div className="flex items-center bg-ink rounded-full h-14 px-3">
             {/* Left two items — icon only, no labels */}
-            {LEFT_NAV.map(({ id, Icon }) => (
+            {LEFT_NAV.map(({ id, label, Icon }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setScreen(id)}
+                aria-label={label}
                 className={`flex-1 flex items-center justify-center min-h-11 rounded-full transition-colors ${
                   screen === id ? 'text-white' : 'text-stone-500 active:text-stone-300'
                 }`}
@@ -163,11 +181,12 @@ function App() {
             <div className="flex-1" />
 
             {/* Right two items — icon only, no labels */}
-            {RIGHT_NAV.map(({ id, Icon }) => (
+            {RIGHT_NAV.map(({ id, label, Icon }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setScreen(id)}
+                aria-label={label}
                 className={`flex-1 flex items-center justify-center min-h-11 rounded-full transition-colors ${
                   screen === id ? 'text-white' : 'text-stone-500 active:text-stone-300'
                 }`}

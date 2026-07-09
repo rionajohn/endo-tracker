@@ -35,3 +35,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   four are standard icon + label items.
 - Community and Profile are placeholder "Coming soon" screens — no real functionality is
   built for MVP. Scope decisions for these screens are pending.
+  - There are now two distinct data collection flows: the existing SOCRATES symptom log (used
+  per-entry, unchanged) and a new one-time Baseline Questionnaire (used once, establishes a
+  personal baseline for comparison). Keep these structurally and visually separate - the
+  baseline questionnaire is not a symptom log entry.
+- Rename the "Profile" nav item and screen to "Pain Profile".
+- The Baseline Questionnaire is accessed from the Pain Profile screen, not from the nav bar
+  directly.
