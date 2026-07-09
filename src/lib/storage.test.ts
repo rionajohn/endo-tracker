@@ -7,21 +7,20 @@ beforeEach(() => {
 })
 
 describe('storage', () => {
-  it('saves an entry and round-trips all seven SOCRATES fields', () => {
+  it('saves an entry and round-trips every field of the 3-step check-in', () => {
     const input = makeEntry({
       site: ['pelvis', 'lower_back'], // Site
       onsetType: 'sudden', // Onset
-      onsetCycleRelation: 'during_period',
+      onsetCycleRelation: 'around_period',
       character: ['cramping', 'stabbing'], // Character
       associatedSymptoms: ['nausea', 'bloating'],
-      radiation: ['legs', 'rectum'], // Radiation
-      timingDuration: 'hours', // Timing
-      timingPattern: 'intermittent',
-      timingCycleDay: 2,
-      exacerbatingFactors: ['movement', 'bowel_movements'], // Exacerbating factors
-      relievingFactors: ['heat'], // Relieving factors
-      nsaidResponse: 'no_relief',
+      bleedingOutsideWindow: 'no', // Timing
+      radiation: ['legs'], // Radiation
+      medicationTaken: 'ibuprofen 400mg', // Exacerbating/relieving factors
+      medicationResponse: 'partly',
       severity: 8, // Severity
+      functionalImpact: 'some',
+      otherSymptomsNotes: 'mild headache too',
     })
 
     const saved = saveEntry(input)
@@ -30,17 +29,16 @@ describe('storage', () => {
     expect(loaded).toBeDefined()
     expect(loaded?.site).toEqual(['pelvis', 'lower_back'])
     expect(loaded?.onsetType).toBe('sudden')
-    expect(loaded?.onsetCycleRelation).toBe('during_period')
+    expect(loaded?.onsetCycleRelation).toBe('around_period')
     expect(loaded?.character).toEqual(['cramping', 'stabbing'])
     expect(loaded?.associatedSymptoms).toEqual(['nausea', 'bloating'])
-    expect(loaded?.radiation).toEqual(['legs', 'rectum'])
-    expect(loaded?.timingDuration).toBe('hours')
-    expect(loaded?.timingPattern).toBe('intermittent')
-    expect(loaded?.timingCycleDay).toBe(2)
-    expect(loaded?.exacerbatingFactors).toEqual(['movement', 'bowel_movements'])
-    expect(loaded?.relievingFactors).toEqual(['heat'])
-    expect(loaded?.nsaidResponse).toBe('no_relief')
+    expect(loaded?.bleedingOutsideWindow).toBe('no')
+    expect(loaded?.radiation).toEqual(['legs'])
+    expect(loaded?.medicationTaken).toBe('ibuprofen 400mg')
+    expect(loaded?.medicationResponse).toBe('partly')
     expect(loaded?.severity).toBe(8)
+    expect(loaded?.functionalImpact).toBe('some')
+    expect(loaded?.otherSymptomsNotes).toBe('mild headache too')
     expect(loaded?.id).toBeTruthy()
     expect(loaded?.createdAt).toBeTruthy()
   })

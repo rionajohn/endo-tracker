@@ -7,134 +7,99 @@ import type {
   BodySite,
   CharacterTag,
   CycleRelation,
-  ExacerbatingFactor,
-  NsaidResponse,
+  MedicationResponse,
   RadiationSite,
-  RelievingFactor,
-  TimingDuration,
 } from '../types'
 
-export const BODY_SITES: BodySite[] = [
-  'pelvis',
-  'lower_back',
-  'abdomen_left',
-  'abdomen_right',
-  'legs',
-  'rectum',
-]
+export const BODY_SITES: BodySite[] = ['pelvis', 'lower_back', 'bowel', 'bladder', 'during_or_after_sex']
 
 export const bodySiteLabel: Record<BodySite, string> = {
   pelvis: 'Pelvis',
   lower_back: 'Lower back',
-  abdomen_left: 'Lower abdomen (left)',
-  abdomen_right: 'Lower abdomen (right)',
-  legs: 'Legs',
-  rectum: 'Rectum/back passage',
+  bowel: 'Bowel',
+  bladder: 'Bladder',
+  during_or_after_sex: 'During or after sex',
 }
 
-export const CYCLE_RELATIONS: CycleRelation[] = [
-  'before_period',
-  'during_period',
-  'after_period',
-  'ovulation',
-  'no_pattern',
-  'unsure',
-]
+export const CYCLE_RELATIONS: CycleRelation[] = ['around_period', 'cycle_not_period', 'unsure', 'no_relation']
 
 export const cycleRelationLabel: Record<CycleRelation, string> = {
-  before_period: 'In the days before my period',
-  during_period: 'During my period',
-  after_period: 'In the days after my period',
-  ovulation: 'Around ovulation (mid-cycle)',
-  no_pattern: 'No link to my cycle',
-  unsure: "I'm not sure",
+  around_period: 'Yes, around my period',
+  cycle_not_period: 'Yes, but not around my period timing',
+  unsure: 'Not sure',
+  no_relation: 'No clear cycle relation',
 }
-
-export const CHARACTER_TAGS: CharacterTag[] = [
-  'cramping',
-  'sharp',
-  'stabbing',
-  'burning',
-  'dull_ache',
-  'throbbing',
-]
 
 export const characterLabel: Record<CharacterTag, string> = {
   cramping: 'Cramping',
-  sharp: 'Sharp',
   stabbing: 'Stabbing',
   burning: 'Burning',
   dull_ache: 'Dull ache',
-  throbbing: 'Throbbing',
+  pain_with_bowel_movements: 'Pain with bowel movements',
+  diarrhoea: 'Diarrhoea',
+  constipation: 'Constipation',
+  pain_when_urinating: 'Pain when urinating',
+  urgency: 'Urgency',
+  frequency: 'Frequency',
+  deep_pain: 'Deep pain',
+  ache_afterwards: 'Ache afterwards',
 }
 
-export const ASSOCIATED_SYMPTOMS: AssociatedSymptom[] = [
-  'nausea',
-  'bloating',
-  'fatigue',
-  'dizziness',
-  'painful_bowel_movements',
-  'painful_urination',
-  'heavy_bleeding',
-]
+// Per-location descriptor options for Step 2 - each entry is either a
+// Character descriptor or the one Radiation option ("Radiating to legs"
+// under Lower back), so the checkbox rendering can write to the right
+// SymptomEntry field per item.
+export type LocationDescriptorOption =
+  | { kind: 'character'; value: CharacterTag; label: string }
+  | { kind: 'radiation'; value: Extract<RadiationSite, 'legs'>; label: string }
+
+export const LOCATION_DESCRIPTORS: Record<BodySite, LocationDescriptorOption[]> = {
+  pelvis: [
+    { kind: 'character', value: 'cramping', label: characterLabel.cramping },
+    { kind: 'character', value: 'stabbing', label: characterLabel.stabbing },
+    { kind: 'character', value: 'burning', label: characterLabel.burning },
+    { kind: 'character', value: 'dull_ache', label: characterLabel.dull_ache },
+  ],
+  lower_back: [
+    { kind: 'character', value: 'cramping', label: characterLabel.cramping },
+    { kind: 'character', value: 'dull_ache', label: characterLabel.dull_ache },
+    { kind: 'radiation', value: 'legs', label: 'Radiating to legs' },
+  ],
+  bowel: [
+    { kind: 'character', value: 'pain_with_bowel_movements', label: characterLabel.pain_with_bowel_movements },
+    { kind: 'character', value: 'diarrhoea', label: characterLabel.diarrhoea },
+    { kind: 'character', value: 'constipation', label: characterLabel.constipation },
+  ],
+  bladder: [
+    { kind: 'character', value: 'pain_when_urinating', label: characterLabel.pain_when_urinating },
+    { kind: 'character', value: 'urgency', label: characterLabel.urgency },
+    { kind: 'character', value: 'frequency', label: characterLabel.frequency },
+  ],
+  during_or_after_sex: [
+    { kind: 'character', value: 'deep_pain', label: characterLabel.deep_pain },
+    { kind: 'character', value: 'ache_afterwards', label: characterLabel.ache_afterwards },
+  ],
+}
+
+export const ASSOCIATED_SYMPTOMS: AssociatedSymptom[] = ['bloating', 'nausea', 'fatigue', 'dizziness', 'bleeding']
 
 export const associatedSymptomLabel: Record<AssociatedSymptom, string> = {
-  nausea: 'Nausea',
   bloating: 'Bloating',
+  nausea: 'Nausea',
   fatigue: 'Fatigue',
   dizziness: 'Dizziness',
-  painful_bowel_movements: 'Pain when passing a bowel motion',
-  painful_urination: 'Pain when passing urine',
-  heavy_bleeding: 'Heavy bleeding',
+  bleeding: 'Bleeding',
 }
 
-export const RADIATION_SITES: RadiationSite[] = ['lower_back', 'legs', 'rectum', 'vagina', 'none']
-
 export const radiationLabel: Record<RadiationSite, string> = {
-  lower_back: 'Lower back',
-  legs: 'Down the legs',
-  rectum: 'Towards the rectum/back passage',
-  vagina: 'Towards the vagina',
+  legs: 'Radiating to legs',
   none: "Doesn't spread anywhere else",
 }
 
-export const TIMING_DURATIONS: TimingDuration[] = ['minutes', 'hours', 'days', 'constant']
+export const MEDICATION_RESPONSES: MedicationResponse[] = ['helped', 'partly', 'no_effect']
 
-export const timingDurationLabel: Record<TimingDuration, string> = {
-  minutes: 'Minutes',
-  hours: 'Hours',
-  days: 'Days',
-  constant: 'Constant, doesn\'t go away',
-}
-
-export const EXACERBATING_FACTORS: ExacerbatingFactor[] = [
-  'movement',
-  'sex',
-  'bowel_movements',
-  'urination',
-  'exercise',
-]
-
-export const exacerbatingFactorLabel: Record<ExacerbatingFactor, string> = {
-  movement: 'Moving around',
-  sex: 'Sex',
-  bowel_movements: 'Bowel movements',
-  urination: 'Passing urine',
-  exercise: 'Exercise',
-}
-
-export const RELIEVING_FACTORS: RelievingFactor[] = ['rest', 'heat', 'nsaids', 'hormonal_contraception']
-
-export const relievingFactorLabel: Record<RelievingFactor, string> = {
-  rest: 'Rest',
-  heat: 'Heat (e.g. hot water bottle)',
-  nsaids: 'Painkillers (NSAIDs, e.g. ibuprofen)',
-  hormonal_contraception: 'Hormonal contraception',
-}
-
-export const nsaidResponseLabel: Record<NsaidResponse, string> = {
-  not_tried: "Haven't tried NSAIDs",
-  no_relief: 'No relief at all',
-  partial_relief: 'Some relief, but pain continues',
-  full_relief: 'Fully relieved',
+export const medicationResponseLabel: Record<MedicationResponse, string> = {
+  helped: 'Helped',
+  partly: 'Partly',
+  no_effect: 'No effect',
 }

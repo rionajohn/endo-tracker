@@ -50,7 +50,7 @@ export function generateWrappedSlides(entries: SymptomEntry[]): WrappedSlide[] {
   }
 
   const topCycleRelation = mostFrequent(entries.map((e) => e.onsetCycleRelation))
-  if (topCycleRelation && topCycleRelation !== 'unsure') {
+  if (topCycleRelation && topCycleRelation !== 'unsure' && topCycleRelation !== 'no_relation') {
     slides.push({
       title: 'When it happens',
       body: `Most of your pain shows up: ${cycleRelationLabel[topCycleRelation].toLowerCase()}.`,
@@ -71,13 +71,8 @@ export function generateWrappedSlides(entries: SymptomEntry[]): WrappedSlide[] {
     body: `On your worst days, you've rated the pain ${maxSeverity} out of 10.`,
   })
 
-  const noReliefCount = entries.filter((e) => e.nsaidResponse === 'no_relief').length
-  if (noReliefCount > 0) {
-    slides.push({
-      title: 'Painkillers',
-      body: `${noReliefCount} of your ${entries.length} entries say over-the-counter painkillers gave no relief.`,
-    })
-  }
+  // Medication (entry.medicationTaken/medicationResponse) is GP-report-only
+  // and must never be summarised or scored here - see types.ts.
 
   const { flagged, reasons } = evaluateFlags(entries)
 

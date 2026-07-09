@@ -5,11 +5,8 @@ import {
   bodySiteLabel,
   characterLabel,
   cycleRelationLabel,
-  exacerbatingFactorLabel,
-  nsaidResponseLabel,
+  medicationResponseLabel,
   radiationLabel,
-  relievingFactorLabel,
-  timingDurationLabel,
 } from '../lib/socrates'
 
 function formatDate(iso: string): string {
@@ -88,10 +85,7 @@ export default function GPReport({ entries }: { entries: SymptomEntry[] }) {
               </p>
               <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                 <dt className="font-medium">Site</dt>
-                <dd>
-                  {list(entry.site.map((s) => bodySiteLabel[s]))}
-                  {entry.siteOther ? `; other: ${entry.siteOther}` : ''}
-                </dd>
+                <dd>{list(entry.site.map((s) => bodySiteLabel[s]))}</dd>
 
                 <dt className="font-medium">Onset</dt>
                 <dd>
@@ -102,33 +96,47 @@ export default function GPReport({ entries }: { entries: SymptomEntry[] }) {
                 <dt className="font-medium">Character</dt>
                 <dd>
                   {list(entry.character.map((c) => characterLabel[c]))}
-                  {entry.characterOther ? `; other: ${entry.characterOther}` : ''}
                   {entry.associatedSymptoms.length > 0 &&
-                    `. Associated: ${list(entry.associatedSymptoms.map((s) => associatedSymptomLabel[s]))}`}
+                    `. Whole-body: ${list(entry.associatedSymptoms.map((s) => associatedSymptomLabel[s]))}`}
                 </dd>
 
                 <dt className="font-medium">Radiation</dt>
-                <dd>
-                  {list(entry.radiation.map((r) => radiationLabel[r]))}
-                  {entry.radiationOther ? `; other: ${entry.radiationOther}` : ''}
-                </dd>
+                <dd>{list(entry.radiation.map((r) => radiationLabel[r]))}</dd>
 
                 <dt className="font-medium">Timing</dt>
                 <dd>
-                  Duration: {timingDurationLabel[entry.timingDuration]}; pattern:{' '}
-                  {entry.timingPattern === 'constant' ? 'Constant' : 'Intermittent'}
-                  {entry.timingCycleDay != null && `; cycle day ${entry.timingCycleDay}`}
+                  {entry.bleedingOutsideWindow != null
+                    ? `Bleeding outside expected period window: ${entry.bleedingOutsideWindow === 'yes' ? 'Yes' : 'No'}`
+                    : 'No bleeding-timing data logged'}
                 </dd>
 
                 <dt className="font-medium">Exacerbating/relieving</dt>
                 <dd>
-                  Worse with: {list(entry.exacerbatingFactors.map((f) => exacerbatingFactorLabel[f]))}.
-                  Better with: {list(entry.relievingFactors.map((f) => relievingFactorLabel[f]))}.
-                  NSAID response: {nsaidResponseLabel[entry.nsaidResponse]}
+                  {entry.medicationTaken
+                    ? `Took: ${entry.medicationTaken}${
+                        entry.medicationResponse ? ` (${medicationResponseLabel[entry.medicationResponse]})` : ''
+                      }`
+                    : 'No medication logged'}
                 </dd>
 
                 <dt className="font-medium">Severity</dt>
                 <dd>{entry.severity}/10</dd>
+
+                <dt className="font-medium">Functional impact</dt>
+                <dd>
+                  {entry.functionalImpact === 'none'
+                    ? 'No activities affected'
+                    : entry.functionalImpact === 'some'
+                    ? 'Some activities affected'
+                    : 'Most activities affected'}
+                </dd>
+
+                {entry.otherSymptomsNotes && (
+                  <>
+                    <dt className="font-medium">Other notes</dt>
+                    <dd>{entry.otherSymptomsNotes}</dd>
+                  </>
+                )}
               </dl>
             </li>
           ))}

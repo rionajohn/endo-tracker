@@ -29,17 +29,10 @@ describe('evaluateFlags', () => {
     expect(result.reasons.map((r) => r.code)).toContain('high_severity')
   })
 
-  it('flags on NSAID non-response with clinically significant pain', () => {
-    const entries = [withId(makeEntry({ severity: 6, nsaidResponse: 'no_relief' }), '1')]
-
-    const result = evaluateFlags(entries)
-
-    expect(result.flagged).toBe(true)
-    expect(result.reasons.map((r) => r.code)).toContain('nsaid_non_response')
-  })
-
-  it('does not flag NSAID non-response when pain is mild', () => {
-    const entries = [withId(makeEntry({ severity: 2, nsaidResponse: 'no_relief' }), '1')]
+  it('never factors medication response into any flag', () => {
+    const entries = [
+      withId(makeEntry({ severity: 6, medicationTaken: 'ibuprofen 400mg', medicationResponse: 'no_effect' }), '1'),
+    ]
 
     const result = evaluateFlags(entries)
 
@@ -48,9 +41,9 @@ describe('evaluateFlags', () => {
 
   it('flags a repeating cycle-linked pattern across 3+ entries', () => {
     const entries = [
-      withId(makeEntry({ onsetCycleRelation: 'during_period', severity: 4 }), '1'),
-      withId(makeEntry({ onsetCycleRelation: 'before_period', severity: 4 }), '2'),
-      withId(makeEntry({ onsetCycleRelation: 'ovulation', severity: 4 }), '3'),
+      withId(makeEntry({ onsetCycleRelation: 'around_period', severity: 4 }), '1'),
+      withId(makeEntry({ onsetCycleRelation: 'around_period', severity: 4 }), '2'),
+      withId(makeEntry({ onsetCycleRelation: 'around_period', severity: 4 }), '3'),
     ]
 
     const result = evaluateFlags(entries)
@@ -61,8 +54,8 @@ describe('evaluateFlags', () => {
 
   it('does not flag a cyclical pattern from only 2 entries', () => {
     const entries = [
-      withId(makeEntry({ onsetCycleRelation: 'during_period', severity: 4 }), '1'),
-      withId(makeEntry({ onsetCycleRelation: 'before_period', severity: 4 }), '2'),
+      withId(makeEntry({ onsetCycleRelation: 'around_period', severity: 4 }), '1'),
+      withId(makeEntry({ onsetCycleRelation: 'around_period', severity: 4 }), '2'),
     ]
 
     const result = evaluateFlags(entries)
@@ -72,8 +65,8 @@ describe('evaluateFlags', () => {
 
   it('flags repeated bowel/bladder involvement as possible deep endometriosis', () => {
     const entries = [
-      withId(makeEntry({ associatedSymptoms: ['painful_bowel_movements'], severity: 4 }), '1'),
-      withId(makeEntry({ associatedSymptoms: ['painful_urination'], severity: 4 }), '2'),
+      withId(makeEntry({ character: ['pain_with_bowel_movements'], severity: 4 }), '1'),
+      withId(makeEntry({ character: ['pain_when_urinating'], severity: 4 }), '2'),
     ]
 
     const result = evaluateFlags(entries)

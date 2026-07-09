@@ -3,7 +3,8 @@ interface RadioGroupProps<T extends string> {
   name: string
   options: T[]
   labels: Record<T, string>
-  value: T
+  /** Pass undefined for a required-but-unanswered-yet question - no option renders as checked. */
+  value: T | undefined
   onChange: (next: T) => void
 }
 

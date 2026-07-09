@@ -2,88 +2,91 @@
 // Exacerbating/relieving factors, Severity. Every symptom log must capture all
 // seven fields in full, regardless of how they are later presented to the
 // patient or GP (see BRIEF.md, "Two audiences, one dataset").
+//
+// The daily log is a 3-step check-in (see SymptomForm.tsx) rather than one
+// long SOCRATES-labelled form, so each category below is represented by
+// whatever the check-in actually asks for it - see the field-by-field
+// comments for the mapping.
 
-export type CycleRelation =
-  | 'before_period'
-  | 'during_period'
-  | 'after_period'
-  | 'ovulation'
-  | 'no_pattern'
-  | 'unsure'
-
+// Onset - Step 1's lightweight "how did it start / cycle link" add-on.
 export type OnsetType = 'sudden' | 'gradual'
 
+export type CycleRelation = 'around_period' | 'cycle_not_period' | 'unsure' | 'no_relation'
+
+// Site - Step 2's pain locations.
+export type BodySite = 'pelvis' | 'lower_back' | 'bowel' | 'bladder' | 'during_or_after_sex'
+
+// Character - Step 2's per-location descriptors (flattened across every
+// selected location; SOCRATES doesn't track descriptors per-site).
 export type CharacterTag =
   | 'cramping'
-  | 'sharp'
   | 'stabbing'
   | 'burning'
   | 'dull_ache'
-  | 'throbbing'
+  | 'pain_with_bowel_movements'
+  | 'diarrhoea'
+  | 'constipation'
+  | 'pain_when_urinating'
+  | 'urgency'
+  | 'frequency'
+  | 'deep_pain'
+  | 'ache_afterwards'
 
-export type AssociatedSymptom =
-  | 'nausea'
-  | 'bloating'
-  | 'fatigue'
-  | 'dizziness'
-  | 'painful_bowel_movements'
-  | 'painful_urination'
-  | 'heavy_bleeding'
+// Whole-body symptoms - Step 2, not tied to a specific location.
+export type AssociatedSymptom = 'bloating' | 'nausea' | 'fatigue' | 'dizziness' | 'bleeding'
 
-export type RadiationSite = 'lower_back' | 'legs' | 'rectum' | 'vagina' | 'none'
+// Radiation - Step 2's "radiating to legs" option under Lower back.
+export type RadiationSite = 'legs' | 'none'
 
-export type TimingPattern = 'constant' | 'intermittent'
+// Functional impact - Step 3. Not one of the seven SOCRATES categories, but a
+// NICE-aligned signal already used elsewhere in the app (see
+// BaselineQuestionnaire's missedActivitiesFrequency).
+export type FunctionalImpactLevel = 'none' | 'some' | 'most'
 
-export type TimingDuration = 'minutes' | 'hours' | 'days' | 'constant'
-
-export type ExacerbatingFactor = 'movement' | 'sex' | 'bowel_movements' | 'urination' | 'exercise'
-
-export type RelievingFactor = 'rest' | 'heat' | 'nsaids' | 'hormonal_contraception'
-
-export type NsaidResponse = 'not_tried' | 'no_relief' | 'partial_relief' | 'full_relief'
-
-export type BodySite =
-  | 'pelvis'
-  | 'lower_back'
-  | 'abdomen_left'
-  | 'abdomen_right'
-  | 'legs'
-  | 'rectum'
+// Medication response - Step 3.
+export type MedicationResponse = 'helped' | 'partly' | 'no_effect'
 
 export interface SymptomEntry {
   id: string
   createdAt: string // ISO timestamp
 
-  // Site: where the pain is felt.
+  // Site (Step 2: pain locations).
   site: BodySite[]
-  siteOther?: string
 
-  // Onset: how it started, and its relationship to the menstrual cycle.
+  // Onset (Step 1 add-on): how today's pain started, and its relationship to
+  // the cycle.
   onsetType: OnsetType
   onsetCycleRelation: CycleRelation
 
-  // Character: what the pain feels like, plus other symptoms felt alongside it.
+  // Character (Step 2: per-location descriptors) plus whole-body symptoms.
   character: CharacterTag[]
-  characterOther?: string
   associatedSymptoms: AssociatedSymptom[]
 
-  // Radiation: where the pain spreads to.
+  // Timing (Step 2): whether logged bleeding fell outside the expected
+  // period window. Only present when "Bleeding" is among associatedSymptoms.
+  bleedingOutsideWindow?: YesNo
+
+  // Radiation (Step 2): "radiating to legs" under the Lower back location.
   radiation: RadiationSite[]
-  radiationOther?: string
 
-  // Timing: how long it lasts and how it recurs.
-  timingDuration: TimingDuration
-  timingPattern: TimingPattern
-  timingCycleDay?: number
+  // Exacerbating/relieving factors (Step 3): medication taken today and its
+  // effect. GP-report-only - see SymptomForm/GPReport - this must never
+  // factor into evaluateFlags or any other scoring logic.
+  medicationTaken?: string
+  medicationResponse?: MedicationResponse
 
-  // Exacerbating/relieving factors: what makes it worse or better, including
-  // response to NSAIDs, which is a specific marker of drug-resistant pain.
-  exacerbatingFactors: ExacerbatingFactor[]
-  relievingFactors: RelievingFactor[]
-  nsaidResponse: NsaidResponse
-
-  // Severity: self-reported pain intensity, 0 (none) - 10 (worst possible).
+  // Severity (Step 1): self-reported pain intensity for the day, 0 (none) -
+  // 10 (worst possible).
   severity: number
+
+  // Functional impact (Step 3): how much today's symptoms affected daily
+  // activities.
+  functionalImpact: FunctionalImpactLevel
+
+  // Free text for anything not covered above (e.g. headaches, spotting).
+  // GP-report-only - must never factor into evaluateFlags or any other
+  // scoring logic.
+  otherSymptomsNotes?: string
 }
 
 export type NewSymptomEntry = Omit<SymptomEntry, 'id' | 'createdAt'>

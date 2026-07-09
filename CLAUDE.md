@@ -42,3 +42,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Rename the "Profile" nav item and screen to "Pain Profile".
 - The Baseline Questionnaire is accessed from the Pain Profile screen, not from the nav bar
   directly.
+- The daily symptom log is a three-step check-in, not a single form: (1) pain during the day,
+  (2) symptom location and character, (3) functional impact and medication. See the Marigold
+  reference model for the exact structure - locations have their own linked descriptors, and
+  bleeding/other-symptoms/medication are recorded for the GP report but don't affect any score.

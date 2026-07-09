@@ -133,7 +133,7 @@ function App() {
           {screen === 'home'      && <HomeScreen onStartLogging={() => setScreen('log')} onOpenNice={() => setScreen('nice')} />}
           {screen === 'nice'      && <NiceScreen onBack={() => setScreen('home')} />}
           {screen === 'calendar'  && <CalendarScreen entries={entries} onDelete={handleDelete} />}
-          {screen === 'log'       && <SymptomForm onSave={handleSave} />}
+          {screen === 'log'       && <SymptomForm onSave={handleSave} entries={entries} />}
           {screen === 'community' && <CommunityScreen />}
           {screen === 'profile'   && <PainProfileScreen baseline={baseline} onOpenBaseline={() => setScreen('baseline')} />}
           {screen === 'baseline'  && (

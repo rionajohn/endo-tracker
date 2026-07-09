@@ -5,16 +5,12 @@ export function makeEntry(overrides: Partial<NewSymptomEntry> = {}): NewSymptomE
   return {
     site: ['pelvis'],
     onsetType: 'gradual',
-    onsetCycleRelation: 'no_pattern',
+    onsetCycleRelation: 'unsure',
     character: ['cramping'],
     associatedSymptoms: [],
     radiation: ['none'],
-    timingDuration: 'hours',
-    timingPattern: 'intermittent',
-    exacerbatingFactors: [],
-    relievingFactors: [],
-    nsaidResponse: 'not_tried',
     severity: 3,
+    functionalImpact: 'none',
     ...overrides,
   }
 }

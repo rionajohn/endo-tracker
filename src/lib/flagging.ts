@@ -7,7 +7,6 @@ import type { SymptomEntry } from '../types'
  * The thresholds and rules below are a first-pass approximation of the
  * referral logic in NICE guideline NG73 ("Endometriosis: diagnosis and
  * management"), which recommends considering referral/investigation when
- * pain is not managed effectively by simple analgesia (e.g. NSAIDs), when
  * pain is cyclical and impacts quality of life, and treating cyclical bowel
  * or bladder symptoms (suggestive of possible deep endometriosis) as
  * warranting more urgent assessment.
@@ -17,14 +16,14 @@ import type { SymptomEntry } from '../types'
  * are a reasonable MVP interpretation only and MUST be reviewed and signed
  * off by a clinician before this logic is used outside a demo/prototype
  * context. Do not treat this module as validated medical advice.
+ *
+ * Medication (entry.medicationTaken/medicationResponse) and free-text notes
+ * (entry.otherSymptomsNotes) are recorded for the GP report only and must
+ * never be read here - see types.ts and SymptomForm.tsx.
  * ============================================================================
  */
 
-export type FlagReasonCode =
-  | 'high_severity'
-  | 'nsaid_non_response'
-  | 'cyclical_pattern'
-  | 'possible_deep_endometriosis'
+export type FlagReasonCode = 'high_severity' | 'cyclical_pattern' | 'possible_deep_endometriosis'
 
 export interface FlagReason {
   code: FlagReasonCode
@@ -40,11 +39,10 @@ export interface FlagResult {
 }
 
 const SEVERE_PAIN_THRESHOLD = 8 // out of 10
-const NSAID_NON_RESPONSE_SEVERITY_THRESHOLD = 5 // out of 10
 const CYCLICAL_PATTERN_MIN_ENTRIES = 3
 const BOWEL_BLADDER_MIN_ENTRIES = 2
 
-const CYCLE_LINKED = new Set(['before_period', 'during_period', 'ovulation'])
+const CYCLE_LINKED = new Set(['around_period'])
 
 /**
  * Evaluates the full log history against the placeholder threshold rules
@@ -62,18 +60,6 @@ export function evaluateFlags(entries: SymptomEntry[]): FlagResult {
     })
   }
 
-  if (
-    entries.some(
-      (e) => e.nsaidResponse === 'no_relief' && e.severity >= NSAID_NON_RESPONSE_SEVERITY_THRESHOLD,
-    )
-  ) {
-    reasons.push({
-      code: 'nsaid_non_response',
-      clinicalText: 'NSAID non-response reported alongside clinically significant pain severity.',
-      patientText: "Painkillers haven't been touching the pain when it's bad.",
-    })
-  }
-
   const cycleLinkedCount = entries.filter((e) => CYCLE_LINKED.has(e.onsetCycleRelation)).length
   if (cycleLinkedCount >= CYCLICAL_PATTERN_MIN_ENTRIES) {
     reasons.push({
@@ -84,7 +70,7 @@ export function evaluateFlags(entries: SymptomEntry[]): FlagResult {
   }
 
   const bowelBladderCount = entries.filter((e) =>
-    e.associatedSymptoms.some((s) => s === 'painful_bowel_movements' || s === 'painful_urination'),
+    e.character.some((c) => c === 'pain_with_bowel_movements' || c === 'pain_when_urinating'),
   ).length
   if (bowelBladderCount >= BOWEL_BLADDER_MIN_ENTRIES) {
     reasons.push({
