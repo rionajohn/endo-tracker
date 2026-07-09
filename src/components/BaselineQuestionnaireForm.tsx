@@ -52,6 +52,7 @@ import {
 } from '../lib/baseline'
 import CheckboxGroup from './CheckboxGroup'
 import RadioGroup from './RadioGroup'
+import RangeSlider from './RangeSlider'
 
 interface BaselineQuestionnaireFormProps {
   initial: BaselineQuestionnaire | null
@@ -317,14 +318,12 @@ export default function BaselineQuestionnaireForm({ initial, onSave, onBack }: B
                   {typicalPainSeverity}
                   <span className="text-lg font-semibold text-pink-500">/10</span>
                 </span>
-                <input
-                  type="range"
+                <RangeSlider
                   min={0}
                   max={10}
                   step={1}
                   value={typicalPainSeverity}
-                  onChange={(e) => setTypicalPainSeverity(Number(e.target.value))}
-                  className="h-11 accent-pink-600"
+                  onChange={setTypicalPainSeverity}
                   aria-label="Typical period pain severity"
                 />
               </label>

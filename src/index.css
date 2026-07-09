@@ -41,6 +41,68 @@ body {
   display: none;
 }
 
+/* Range slider styling - matches the phone frame's notch/bezel language:
+   a black, fully rounded track with a larger pastel-purple pill thumb.
+   Applied via the .range-slider class (see components/RangeSlider.tsx) so
+   every slider in the app looks consistent. WebKit has no native "already
+   filled" track pseudo-element, so the purple portion there is faked with a
+   linear-gradient read from the --range-fill custom property (a percentage
+   string) set inline per-input based on its current value; Firefox instead
+   uses its native ::-moz-range-progress pseudo-element. */
+input[type='range'].range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range'].range-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    var(--color-pink-400) var(--range-fill, 50%),
+    var(--color-ink) var(--range-fill, 50%)
+  );
+}
+
+input[type='range'].range-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--color-ink);
+}
+
+input[type='range'].range-slider::-moz-range-progress {
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--color-pink-400);
+}
+
+input[type='range'].range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--color-pink-400);
+  border: 3px solid var(--color-cream);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  margin-top: -9px; /* centers the 28px thumb on the 10px track */
+  cursor: pointer;
+}
+
+input[type='range'].range-slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--color-pink-400);
+  border: 3px solid var(--color-cream);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
 /* Printable GP report: hide everything else when printing. */
 @media print {
   body * {

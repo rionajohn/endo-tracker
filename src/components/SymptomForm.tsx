@@ -34,6 +34,7 @@ import {
 } from '../lib/socrates'
 import CheckboxGroup from './CheckboxGroup'
 import RadioGroup from './RadioGroup'
+import RangeSlider from './RangeSlider'
 import ReassuranceBanner from './ReassuranceBanner'
 import { pickReassuranceMessage } from '../lib/reassurance'
 
@@ -272,17 +273,13 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
             {severity}
             <span className="text-lg font-semibold text-pink-500">/10</span>
           </span>
-          <input
-            type="range"
+          <RangeSlider
             min={0}
             max={10}
             step={1}
             value={severity}
-            onChange={(e) => setSeverity(Number(e.target.value))}
-            onMouseUp={() => triggerBanner('severity', 'severity')}
-            onTouchEnd={() => triggerBanner('severity', 'severity')}
-            onKeyUp={() => triggerBanner('severity', 'severity')}
-            className="h-11 accent-pink-600"
+            onChange={setSeverity}
+            onCommit={() => triggerBanner('severity', 'severity')}
             aria-label="Pain severity"
           />
         </label>
