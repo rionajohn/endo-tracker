@@ -25,7 +25,7 @@ export default function PainProfileScreen({ baseline, onOpenBaseline }: PainProf
         </p>
       </div>
 
-      {/* Baseline entry point — the questionnaire is one-time, accessed only from here */}
+      {/* Baseline entry point — the questionnaire is only accessed from here, never the nav bar */}
       {baseline ? (
         <button
           type="button"
@@ -51,13 +51,11 @@ export default function PainProfileScreen({ baseline, onOpenBaseline }: PainProf
           onClick={onOpenBaseline}
           className="flex flex-col gap-2 bg-pink-100 rounded-3xl p-5 text-left active:bg-pink-200 transition-colors"
         >
-          <span className="self-start bg-pink-300 text-ink text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">
-            One-time setup
-          </span>
           <p className="text-base font-extrabold text-ink leading-snug">Complete your baseline</p>
           <p className="text-sm text-stone-600 leading-relaxed">
             A short questionnaire about your cycle, pain history and healthcare experience, so
-            future symptom logs can be compared against where you started.
+            future symptom logs can be compared against where you started. Fill it in whenever
+            suits you, and come back to update it any time.
           </p>
           <span className="text-sm font-semibold text-pink-700">Start the questionnaire →</span>
         </button>

@@ -200,14 +200,14 @@ function App() {
               anchors the plus button visually as part of the nav bar */}
           <span className="absolute left-1/2 -translate-x-1/2 -top-7 w-16 h-16 rounded-full bg-ink pointer-events-none" />
 
-          {/* Raised circular Log Symptoms button — sits inside the ring */}
+          {/* Raised circular Log Symptoms button — sits inside the ring. Fill
+              colour is fixed in every state (default/hover/pressed/active) -
+              only its action changes, never its appearance. */}
           <button
             type="button"
             onClick={() => setScreen('log')}
             aria-label="Log symptoms"
-            className={`absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors text-white ${
-              screen === 'log' ? 'bg-pink-500' : 'bg-pink-400 active:bg-pink-500'
-            }`}
+            className="absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg bg-pink-400 text-white"
           >
             <PlusIcon />
           </button>

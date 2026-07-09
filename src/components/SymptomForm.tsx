@@ -34,6 +34,8 @@ import {
 } from '../lib/socrates'
 import CheckboxGroup from './CheckboxGroup'
 import RadioGroup from './RadioGroup'
+import ReassuranceBanner from './ReassuranceBanner'
+import { pickReassuranceMessage } from '../lib/reassurance'
 
 const ONSET_TYPES: OnsetType[] = ['sudden', 'gradual']
 const onsetTypeLabel: Record<OnsetType, string> = {
@@ -68,6 +70,30 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
   const [nsaidResponse, setNsaidResponse] = useState<NsaidResponse>('not_tried')
   const [severity, setSeverity] = useState(5)
   const [error, setError] = useState<string | null>(null)
+
+  // Reassuring banner — appears near whichever field the person just
+  // interacted with (see lib/reassurance.ts for the message pools and the
+  // two verified statistics it's allowed to draw from).
+  const [banner, setBanner] = useState<{ anchor: string; message: string } | null>(null)
+
+  function triggerBanner(anchor: string, kind: 'severity' | 'symptom') {
+    setBanner({ anchor, message: pickReassuranceMessage(kind) })
+  }
+
+  function handleSiteChange(next: BodySite[]) {
+    if (next.length > site.length) triggerBanner('site', 'symptom')
+    setSite(next)
+  }
+
+  function handleCharacterChange(next: CharacterTag[]) {
+    if (next.length > character.length) triggerBanner('character', 'symptom')
+    setCharacter(next)
+  }
+
+  function handleAssociatedSymptomsChange(next: AssociatedSymptom[]) {
+    if (next.length > associatedSymptoms.length) triggerBanner('associatedSymptoms', 'symptom')
+    setAssociatedSymptoms(next)
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -111,6 +137,7 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
     setRelievingFactors([])
     setNsaidResponse('not_tried')
     setSeverity(5)
+    setBanner(null)
   }
 
   return (
@@ -128,7 +155,7 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
         options={BODY_SITES}
         labels={bodySiteLabel}
         value={site}
-        onChange={setSite}
+        onChange={handleSiteChange}
       />
       <label className="flex flex-col gap-1">
         <span className="text-sm text-stone-600">Other site (optional)</span>
@@ -140,6 +167,9 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
           placeholder="e.g. shoulder tip pain"
         />
       </label>
+      {banner?.anchor === 'site' && (
+        <ReassuranceBanner message={banner.message} onDismiss={() => setBanner(null)} />
+      )}
 
       {/* Onset */}
       <RadioGroup
@@ -165,15 +195,21 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
         options={CHARACTER_TAGS}
         labels={characterLabel}
         value={character}
-        onChange={setCharacter}
+        onChange={handleCharacterChange}
       />
+      {banner?.anchor === 'character' && (
+        <ReassuranceBanner message={banner.message} onDismiss={() => setBanner(null)} />
+      )}
       <CheckboxGroup
         legend="Anything else alongside the pain?"
         options={ASSOCIATED_SYMPTOMS}
         labels={associatedSymptomLabel}
         value={associatedSymptoms}
-        onChange={setAssociatedSymptoms}
+        onChange={handleAssociatedSymptomsChange}
       />
+      {banner?.anchor === 'associatedSymptoms' && (
+        <ReassuranceBanner message={banner.message} onDismiss={() => setBanner(null)} />
+      )}
 
       {/* Radiation */}
       <CheckboxGroup
@@ -243,6 +279,9 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
             step={1}
             value={severity}
             onChange={(e) => setSeverity(Number(e.target.value))}
+            onMouseUp={() => triggerBanner('severity', 'severity')}
+            onTouchEnd={() => triggerBanner('severity', 'severity')}
+            onKeyUp={() => triggerBanner('severity', 'severity')}
             className="h-11 accent-pink-600"
             aria-label="Pain severity"
           />
@@ -252,6 +291,9 @@ export default function SymptomForm({ onSave }: SymptomFormProps) {
           <span>10 - worst possible</span>
         </div>
       </div>
+      {banner?.anchor === 'severity' && (
+        <ReassuranceBanner message={banner.message} onDismiss={() => setBanner(null)} />
+      )}
 
       {error && <p className="text-sm text-pink-700 font-medium">{error}</p>}
 

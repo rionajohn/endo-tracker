@@ -280,8 +280,8 @@ export default function BaselineQuestionnaireForm({ initial, onSave, onBack }: B
       <div className="relative flex-1 min-h-0">
         <form onSubmit={handleSubmit} className="h-full overflow-y-auto px-5 py-5 flex flex-col gap-8">
           <p className="text-sm text-stone-500 leading-relaxed -mt-2">
-            A one-off set of questions to establish your personal baseline, separate from your
-            day-to-day symptom log. Answer as best you can.
+            A set of questions to establish your personal baseline, separate from your day-to-day
+            symptom log. Answer as best you can - you can always come back and update it later.
           </p>
 
           <Section title="About you and cycle history">
