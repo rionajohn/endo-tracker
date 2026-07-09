@@ -42,7 +42,8 @@ export default function NiceScreen({ onBack }: NiceScreenProps) {
       </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-6">
+      <div className="relative flex-1 min-h-0">
+      <div className="h-full overflow-y-auto px-5 py-5 flex flex-col gap-6">
 
         {/* Intro */}
         <div className="flex flex-col gap-2">
@@ -159,6 +160,11 @@ export default function NiceScreen({ onBack }: NiceScreenProps) {
           <span className="font-semibold text-stone-500">nice.org.uk/guidance/ng73</span>.
         </div>
 
+      </div>
+
+      {/* Scroll fade — wide/bezel view only. Fades content out under the
+          inline header's bottom edge as the list scrolls. */}
+      <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-6 backdrop-blur-sm bg-gradient-to-b from-cream/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       </div>
     </div>
   )

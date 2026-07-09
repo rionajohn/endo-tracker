@@ -68,11 +68,16 @@ export default function PhoneFrame({ children }: { children: ReactNode }) {
         style={{ transform: `scale(${scale})`, transformOrigin: 'center' }}
       >
 
-        {/* Dynamic-Island-style pill notch — wide only */}
+        {/* Dynamic-Island-style pill notch — wide only. Bottom edge sits at
+            top-3 (12px) + h-7 (28px) = 40px from the top of the inner app. */}
         <div className="hidden min-[480px]:block absolute top-3 left-1/2 -translate-x-1/2 w-[110px] h-7 bg-stone-900 rounded-full z-50" />
 
         {/* Inner app — h-full inherits bezel height on wide, svh on narrow */}
         <div className="w-full max-w-[420px] h-full bg-cream flex flex-col shadow-xl print:shadow-none print:max-w-none">
+          {/* Notch safe area — reserved gutter below the pill notch, wide only.
+              No screen content (titles, headers) ever renders here; it pushes
+              everything down clear of the notch. */}
+          <div className="hidden min-[480px]:block shrink-0 h-14" />
           {children}
         </div>
 

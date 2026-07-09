@@ -119,14 +119,26 @@ function App() {
       )}
 
       {/* Scrollable content — ONLY this region scrolls */}
-      <main className="flex-1 overflow-y-auto">
-        {screen === 'home'      && <HomeScreen onStartLogging={() => setScreen('log')} onOpenNice={() => setScreen('nice')} />}
-        {screen === 'nice'      && <NiceScreen onBack={() => setScreen('home')} />}
-        {screen === 'calendar'  && <CalendarScreen entries={entries} onDelete={handleDelete} />}
-        {screen === 'log'       && <SymptomForm onSave={handleSave} />}
-        {screen === 'community' && <CommunityScreen />}
-        {screen === 'profile'   && <ProfileScreen />}
-      </main>
+      <div className="relative flex-1 min-h-0">
+        <main className="h-full overflow-y-auto">
+          {screen === 'home'      && <HomeScreen onStartLogging={() => setScreen('log')} onOpenNice={() => setScreen('nice')} />}
+          {screen === 'nice'      && <NiceScreen onBack={() => setScreen('home')} />}
+          {screen === 'calendar'  && <CalendarScreen entries={entries} onDelete={handleDelete} />}
+          {screen === 'log'       && <SymptomForm onSave={handleSave} />}
+          {screen === 'community' && <CommunityScreen />}
+          {screen === 'profile'   && <ProfileScreen />}
+        </main>
+
+        {/* Scroll fade — wide/bezel view only. Blurs and fades scrolled
+            content as it nears the top of the scrollable area, echoing how
+            a real phone's status bar/notch blurs content beneath it. Skipped
+            for screens (calendar, nice) that own their own internal scroll
+            region with static chrome above it — they render their own local
+            fade instead, so this generic one doesn't blur that static chrome. */}
+        {screen !== 'calendar' && screen !== 'nice' && (
+          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-14 z-10 backdrop-blur-md bg-gradient-to-b from-cream/95 via-cream/60 to-transparent [mask-image:linear-gradient(to_bottom,black,black_40%,transparent)]" />
+        )}
+      </div>
 
       {/* Bottom navigation — floating pill, fixed to frame, never scrolls */}
       <nav className="relative shrink-0 print:hidden z-10">

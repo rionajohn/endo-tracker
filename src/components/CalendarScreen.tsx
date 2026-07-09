@@ -159,41 +159,48 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
 
       {/* ── Bottom region: entries for selected date — only shown when entries exist ── */}
       {hasEntries && (
-        <div className="flex-[1] flex flex-col min-h-0 border-t border-stone-100 bg-white rounded-t-3xl px-4 pt-3 pb-2 overflow-y-auto">
-          <p className="text-xs font-extrabold text-stone-400 uppercase tracking-wide mb-2 shrink-0">
-            {selectedLabel}
-          </p>
-          <ul className="flex flex-col gap-2" data-testid="log-history-list">
-            {selectedEntries.map(entry => (
-              <li key={entry.id} className="bg-stone-50 rounded-2xl p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs font-semibold text-ink">{formatTime(entry.createdAt)}</p>
-                  <span className="shrink-0 px-2 rounded-full bg-pink-100 text-pink-700 text-xs font-bold">
-                    {entry.severity}/10
-                  </span>
-                </div>
-                <p className="text-xs text-stone-600 mt-1">
-                  <span className="font-semibold text-ink">Site: </span>
-                  {entry.site.map(s => bodySiteLabel[s]).join(', ') || '—'}
-                </p>
-                <p className="text-xs text-stone-600 mt-0.5">
-                  <span className="font-semibold text-ink">Character: </span>
-                  {entry.character.map(c => characterLabel[c]).join(', ') || '—'}
-                </p>
-                <p className="text-xs text-stone-600 mt-0.5">
-                  <span className="font-semibold text-ink">Onset: </span>
-                  {cycleRelationLabel[entry.onsetCycleRelation]}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => onDelete(entry.id)}
-                  className="mt-2 min-h-9 w-full rounded-full bg-stone-100 text-pink-700 text-xs font-semibold active:bg-stone-200"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="relative flex-[1] min-h-0">
+          <div className="h-full flex flex-col min-h-0 border-t border-stone-100 bg-white rounded-t-3xl px-4 pt-3 pb-2 overflow-y-auto">
+            <p className="text-xs font-extrabold text-stone-400 uppercase tracking-wide mb-2 shrink-0">
+              {selectedLabel}
+            </p>
+            <ul className="flex flex-col gap-2" data-testid="log-history-list">
+              {selectedEntries.map(entry => (
+                <li key={entry.id} className="bg-stone-50 rounded-2xl p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-xs font-semibold text-ink">{formatTime(entry.createdAt)}</p>
+                    <span className="shrink-0 px-2 rounded-full bg-pink-100 text-pink-700 text-xs font-bold">
+                      {entry.severity}/10
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-600 mt-1">
+                    <span className="font-semibold text-ink">Site: </span>
+                    {entry.site.map(s => bodySiteLabel[s]).join(', ') || '—'}
+                  </p>
+                  <p className="text-xs text-stone-600 mt-0.5">
+                    <span className="font-semibold text-ink">Character: </span>
+                    {entry.character.map(c => characterLabel[c]).join(', ') || '—'}
+                  </p>
+                  <p className="text-xs text-stone-600 mt-0.5">
+                    <span className="font-semibold text-ink">Onset: </span>
+                    {cycleRelationLabel[entry.onsetCycleRelation]}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(entry.id)}
+                    className="mt-2 min-h-9 w-full rounded-full bg-stone-100 text-pink-700 text-xs font-semibold active:bg-stone-200"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Scroll fade — wide/bezel view only. Fades entries out under the
+              rounded panel's top edge as the list scrolls, matching the
+              panel's own white background. */}
+          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-6 rounded-t-3xl backdrop-blur-sm bg-gradient-to-b from-white/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         </div>
       )}
     </div>
