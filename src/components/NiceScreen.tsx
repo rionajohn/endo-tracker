@@ -163,8 +163,10 @@ export default function NiceScreen({ onBack }: NiceScreenProps) {
       </div>
 
       {/* Scroll fade — wide/bezel view only. Fades content out under the
-          inline header's bottom edge as the list scrolls. */}
-      <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-6 backdrop-blur-sm bg-gradient-to-b from-cream/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+          inline header's bottom edge as the list scrolls. Fixed 12px height,
+          inside the content's own 20px top padding (py-5) so it never
+          reaches the first section's text. */}
+      <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-3 backdrop-blur-sm bg-gradient-to-b from-cream/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       </div>
     </div>
   )

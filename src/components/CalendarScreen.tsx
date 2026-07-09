@@ -199,8 +199,10 @@ export default function CalendarScreen({ entries, onDelete }: CalendarScreenProp
 
           {/* Scroll fade — wide/bezel view only. Fades entries out under the
               rounded panel's top edge as the list scrolls, matching the
-              panel's own white background. */}
-          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-6 rounded-t-3xl backdrop-blur-sm bg-gradient-to-b from-white/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+              panel's own white background. Fixed 8px height, inside the
+              panel's own 12px top padding (pt-3) so it never reaches the
+              date label text. */}
+          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-2 rounded-t-3xl backdrop-blur-sm bg-gradient-to-b from-white/95 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         </div>
       )}
     </div>

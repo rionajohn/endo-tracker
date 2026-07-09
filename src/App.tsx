@@ -147,13 +147,17 @@ function App() {
 
         {/* Scroll fade — wide/bezel view only. Blurs and fades scrolled
             content as it nears the top of the scrollable area, echoing how
-            a real phone's status bar/notch blurs content beneath it. Skipped
-            for screens (calendar, nice, baseline) that own their own internal
-            scroll region with static chrome above it — they render their own
-            local fade instead, so this generic one doesn't blur that static
-            chrome. */}
+            a real phone's status bar/notch blurs content beneath it. Fixed
+            10px height, well inside the smallest top padding of any screen
+            it overlays (16px on the Log screen) so it can never reach real
+            text, at rest or scrolled - it's a static overlay, not scroll-
+            position-aware, so its size alone must guarantee no overlap.
+            Skipped for screens (calendar, nice, baseline) that own their own
+            internal scroll region with static chrome above it — they render
+            their own local fade instead, so this generic one doesn't blur
+            that static chrome. */}
         {screen !== 'calendar' && screen !== 'nice' && screen !== 'baseline' && (
-          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-14 z-10 backdrop-blur-md bg-gradient-to-b from-cream/95 via-cream/60 to-transparent [mask-image:linear-gradient(to_bottom,black,black_40%,transparent)]" />
+          <div className="hidden min-[480px]:block pointer-events-none absolute top-0 inset-x-0 h-[10px] z-10 backdrop-blur-sm bg-gradient-to-b from-cream/90 to-transparent [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         )}
       </div>
 
